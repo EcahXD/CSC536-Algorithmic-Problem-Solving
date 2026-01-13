@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pseudocode Logic | CSC402 Learning Portal</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --gf-green: #2f8d46;
+      --gf-dark-green: #246d35;
+      --gf-bg: #f4f7f6;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--gf-bg);
+      color: #333;
+      padding-top: 80px;
+    }
+
+    /* --- Navigation (Synced) --- */
+    .navbar {
+      background: white !important;
+      border-bottom: 4px solid var(--gf-green);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand { font-weight: 800; color: var(--primary-color) !important; letter-spacing: -1px; }
+    .navbar-brand span { color: var(--gf-green); }
+    .nav-link { font-weight: 500; color: #444 !important; transition: 0.3s; margin: 0 5px; }
+    .nav-link:hover, .nav-link.active { color: var(--gf-green) !important; }
+
+    .btn-gf {
+      background-color: var(--gf-green) !important;
+      border-color: var(--gf-green) !important;
+      color: white !important;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-gf:hover {
+      background-color: var(--gf-dark-green) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(47, 141, 70, 0.3);
+    }
+
+    /* --- Page Header (Fixed Alignment) --- */
+    .page-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+      color: white;
+      padding: 100px 0;
+      position: relative;
+      margin-top: -80px;
+    }
+    .page-header::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      opacity: 0.1;
+    }
+
+    /* --- Content Components --- */
+    .content-card {
+      background: white;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      margin-bottom: 40px;
+      padding: 35px;
+    }
+    
+    .section-title {
+      border-left: 6px solid var(--gf-green);
+      padding-left: 20px;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* IDE-style Code Window */
+    .code-window {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 25px;
+      font-family: 'Fira Code', monospace;
+      color: #abb2bf;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .code-header {
+      background: #2d2d2d;
+      padding: 10px 20px;
+      margin: -25px -25px 20px -25px;
+      display: flex;
+      gap: 8px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .keyword { color: #c678dd; font-weight: bold; }
+    .variable { color: #e06c75; }
+    .comment { color: #5c6370; font-style: italic; }
+    .string { color: #98c379; }
+
+    /* Flip Cards for Keywords */
+    .key-card { height: 160px; perspective: 1000px; margin-bottom: 20px; }
+    .key-card-inner {
+      position: relative; width: 100%; height: 100%;
+      text-align: center; transition: 0.6s;
+      transform-style: preserve-3d; cursor: pointer;
+    }
+    .key-card:hover .key-card-inner { transform: rotateY(180deg); }
+    .key-front, .key-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 15px; padding: 15px; border: 1px solid #eee;
+    }
+    .key-front { background: white; border: 2px solid var(--gf-green); }
+    .key-back { background: var(--gf-green); color: white; transform: rotateY(180deg); }
+
+    /* Table Styles */
+    .gf-table { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .gf-table thead { background-color: var(--primary-color); color: white; }
+
+    footer { background: #1a1a1a; color: white; padding: 50px 0; }
+
+    /* Update the button styles */
+.nav-pills .nav-link.btn-gf {
+    background-color: white !important;
+    color: var(--gf-green) !important;
+    border: 2px solid var(--gf-green) !important;
+    transition: 0.3s;
+}
+
+.nav-pills .nav-link.btn-gf.active {
+    background-color: var(--gf-green) !important;
+    color: white !important;
+}
+
+/* Simulator Styles */
+.sim-container {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.output-box {
+    background: #2d2d2d;
+    color: #00ff00;
+    font-family: 'Fira Code', monospace;
+    padding: 15px;
+    border-radius: 8px;
+    min-height: 50px;
+    margin-top: 10px;
+    white-space: pre-wrap;
+}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top py-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <i class="fas fa-terminal me-2"></i>CSC<span>402</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="basics.html">Basics</a></li>
+        <li class="nav-item"><a class="nav-link" href="flowchart.html">Flowchart</a></li>
+        <li class="nav-item"><a class="nav-link active" href="pseudocode.html">Pseudocode</a></li>
+        <li class="nav-item"><a class="nav-link" href="control.html">Control Structures</a></li>
+        <li class="nav-item"><a class="nav-link px-3 ms-lg-3 btn btn-gf text-white" href="quizzes.html">Practice Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header text-center">
+  <div class="container position-relative" style="z-index: 2;">
+    <h1 class="display-4 fw-bold mb-3">Structured English Logic</h1>
+    <p class="lead opacity-75">Level 03: Designing Algorithms with Pseudocode</p>
+  </div>
+</header>
+
+<main class="container my-5">
+  <div class="content-card">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <h2 class="section-title">What is Pseudocode?</h2>
+        <p><strong>Pseudocode</strong> is a "fake" code. It is a high-level description of an algorithm that uses the structural conventions of programming languages but is intended for human reading rather than machine reading.</p>
+        <p>In CSC402, we use it to focus on the <strong>logic</strong> without worrying about semicolons, curly braces, or complex syntax rules.</p>
+      </div>
+      <div class="col-lg-5">
+        <div class="ratio ratio-16x9 rounded-3 shadow-lg overflow-hidden">
+          <iframe src="https://www.youtube.com/embed/PwGA4Lm8zuE" title="Pseudocode Basics" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <h2 class="section-title">Core Keywords</h2>
+  <p class="mb-4 text-muted">Click or hover over the cards to see how we define instructions in pseudocode.</p>
+  
+  <div class="row g-4 mb-5">
+    <div class="col-6 col-md-3 key-card">
+      <div class="key-card-inner">
+        <div class="key-front">
+          <h5 class="fw-bold text-success">START / END</h5>
+        </div>
+        <div class="key-back">
+          <p class="small">The boundaries of your algorithm. Every process must have these.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 key-card">
+      <div class="key-card-inner">
+        <div class="key-front">
+          <h5 class="fw-bold text-primary">READ / GET</h5>
+        </div>
+        <div class="key-back">
+          <p class="small">Used when the program needs to receive input from the user.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 key-card">
+      <div class="key-card-inner">
+        <div class="key-front">
+          <h5 class="fw-bold text-warning">SET / COMPUTE</h5>
+        </div>
+        <div class="key-back">
+          <p class="small">Used for calculations and assigning values to variables.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3 key-card">
+      <div class="key-card-inner">
+        <div class="key-front">
+          <h5 class="fw-bold text-danger">DISPLAY / PRINT</h5>
+        </div>
+        <div class="key-back">
+          <p class="small">Used to output the result or message to the screen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+
+  <div class="content-card">
+  <h2 class="section-title">The Writing Standards</h2>
+  <p class="lead text-muted mb-5">Pseudocode is the bridge between human thought and computer logic. In CSC402, clarity is more important than semicolons. Follow these three standard patterns to ensure your logic is exam-ready.</p>
+
+  <div class="row mb-5 pb-5 border-bottom align-items-center">
+    <div class="col-lg-6">
+      <div class="d-flex align-items-center mb-3">
+        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">01</div>
+        <h4 class="fw-bold mb-0">The IPO Standard (Input-Process-Output)</h4>
+      </div>
+      <p>The foundation of every algorithm. This standard ensures that data flows in a single direction without confusion.</p>
+      <ul class="list-unstyled">
+        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><strong>Keywords:</strong> Always use <code>READ</code> for input and <code>DISPLAY</code> for output.</li>
+        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><strong>Variable Naming:</strong> Use <em>CamelCase</em> or <em>snake_case</em> (e.g., <code>totalPrice</code>). Avoid single letters like <code>x</code> or <code>y</code>.</li>
+        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><strong>Start/End:</strong> Every sequence must be wrapped in <code>START</code> and <code>END</code> tags.</li>
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <div class="code-window shadow-lg">
+        <div class="code-header d-flex align-items-center">
+          <span class="badge bg-dark-subtle text-muted border me-2">Standard</span>
+          <span class="small text-muted">basic_calculation.ps</span>
+        </div>
+        <div class="code-content" style="font-size: 1.1rem; line-height: 2;">
+          <div><span class="keyword">START</span></div>
+          <div class="ps-4"><span class="keyword">READ</span> <span class="variable">hoursWorked, hourlyRate</span></div>
+          <div class="ps-4"><span class="keyword">SET</span> <span class="variable">grossPay</span> = <span class="variable">hoursWorked</span> * <span class="variable">hourlyRate</span></div>
+          <div class="ps-4"><span class="keyword">DISPLAY</span> <span class="variable">grossPay</span></div>
+          <div><span class="keyword">END</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5 pb-5 border-bottom align-items-center">
+    <div class="col-lg-6 order-lg-2">
+      <div class="d-flex align-items-center mb-3">
+        <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">02</div>
+        <h4 class="fw-bold mb-0">The Selection Hierarchy</h4>
+      </div>
+      <p>In CSC402, branching logic must be visually clear. This standard focuses on the "Scope" of a decision.</p>
+      <ul class="list-unstyled">
+        <li class="mb-2"><i class="fas fa-check-circle text-danger me-2"></i><strong>The ENDIF Rule:</strong> Every <code>IF</code> must have a closing <code>ENDIF</code> to prevent "Dangling Else" errors.</li>
+        <li class="mb-2"><i class="fas fa-check-circle text-danger me-2"></i><strong>Indentation:</strong> Each level of nesting must be indented by 4 spaces (or 1 tab) to show ownership.</li>
+        <li class="mb-2"><i class="fas fa-check-circle text-danger me-2"></i><strong>The THEN Keyword:</strong> Unlike C++, pseudocode uses <code>THEN</code> to signify the start of the "True" block.</li>
+      </ul>
+    </div>
+    <div class="col-lg-6 order-lg-1">
+      <div class="code-window shadow-lg">
+        <div class="code-header d-flex align-items-center">
+          <span class="badge bg-dark-subtle text-muted border me-2">Standard</span>
+          <span class="small text-muted">nested_logic.ps</span>
+        </div>
+        <div class="code-content" style="font-size: 1.1rem; line-height: 1.8;">
+          <div><span class="keyword">IF</span> <span class="variable">score</span> >= 80 <span class="keyword">THEN</span></div>
+          <div class="ps-4"><span class="keyword">DISPLAY</span> <span class="string">"A"</span></div>
+          <div><span class="keyword">ELSE</span></div>
+          <div class="ps-4"><span class="keyword">IF</span> <span class="variable">score</span> >= 50 <span class="keyword">THEN</span></div>
+          <div class="ps-5"><span class="keyword">DISPLAY</span> <span class="string">"Pass"</span></div>
+          <div class="ps-4"><span class="keyword">ELSE</span></div>
+          <div class="ps-5"><span class="keyword">DISPLAY</span> <span class="string">"Fail"</span></div>
+          <div class="ps-4"><span class="keyword">ENDIF</span></div>
+          <div><span class="keyword">ENDIF</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center">
+    <div class="col-lg-6">
+      <div class="d-flex align-items-center mb-3">
+        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; font-weight: bold;">03</div>
+        <h4 class="fw-bold mb-0">Sentinel Loop Control</h4>
+      </div>
+      <p>Loops that run until a specific value is entered require a "Double Read" pattern to be considered valid pseudocode.</p>
+      <ul class="list-unstyled">
+        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i><strong>The Prime Read:</strong> You must <code>READ</code> the variable once <em>before</em> the loop begins.</li>
+        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i><strong>The Update Read:</strong> You must <code>READ</code> the variable again as the <em>last line</em> inside the loop.</li>
+        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i><strong>Condition Check:</strong> The <code>WHILE</code> condition should always check for the "End Value" (e.g., <code>!= -1</code>).</li>
+      </ul>
+    </div>
+    <div class="col-lg-6">
+      <div class="code-window shadow-lg">
+        <div class="code-header d-flex align-items-center">
+          <span class="badge bg-dark-subtle text-muted border me-2">Standard</span>
+          <span class="small text-muted">sentinel_pattern.ps</span>
+        </div>
+        <div class="code-content" style="font-size: 1.1rem; line-height: 1.8;">
+          <div><span class="keyword">READ</span> <span class="variable">grade</span> <span class="comment">// Prime Read</span></div>
+          <div class="mt-2"><span class="keyword">WHILE</span> <span class="variable">grade</span> != -1 <span class="keyword">DO</span></div>
+          <div class="ps-4"><span class="keyword">SET</span> <span class="variable">total</span> = <span class="variable">total</span> + <span class="variable">grade</span></div>
+          <div class="ps-4"><span class="keyword">READ</span> <span class="variable">grade</span> <span class="comment">// Update Read</span></div>
+          <div><span class="keyword">ENDWHILE</span></div>
+          <div class="mt-2"><span class="keyword">DISPLAY</span> <span class="variable">total</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content-card">
+  <h2 class="section-title">Bridging the Gap: Logic vs. Syntax</h2>
+  <p class="mb-4">Moving from human logic to machine code can be confusing. Hover over a logic step in the <b>Pseudocode</b> to see its equivalent in <b>C++</b>.</p>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="p-3 border-start border-4 border-success bg-light rounded-end mb-3">
+        <h5 class="fw-bold mb-1">Pseudocode <span class="badge bg-success ms-2">Human Logic</span></h5>
+        <p class="small text-muted">The "Blueprint" used in CSC402 exams.</p>
+      </div>
+      <div class="code-window">
+        <div class="code-header">
+           <span class="text-muted small"><i class="fas fa-file-alt me-2"></i>logic_only.ps</span>
+        </div>
+        <div class="code-content comparison-viewer" id="pseudocode-side">
+          <div class="sync-line" data-line="1"><span class="keyword">READ</span> <span class="variable">age</span></div>
+          <div class="sync-line mt-2" data-line="2"><span class="keyword">IF</span> <span class="variable">age</span> >= 18 <span class="keyword">THEN</span></div>
+          <div class="sync-line ps-4" data-line="3"><span class="keyword">DISPLAY</span> <span class="string">"Eligible"</span></div>
+          <div class="sync-line" data-line="4"><span class="keyword">ELSE</span></div>
+          <div class="sync-line ps-4" data-line="5"><span class="keyword">DISPLAY</span> <span class="string">"Minor"</span></div>
+          <div class="sync-line" data-line="6"><span class="keyword">ENDIF</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="p-3 border-start border-4 border-primary bg-light rounded-end mb-3">
+        <h5 class="fw-bold mb-1">C++ Syntax <span class="badge bg-primary ms-2">Machine Strict</span></h5>
+        <p class="small text-muted">The implementation in the lab.</p>
+      </div>
+      <div class="code-window" style="background: #1e1e1e;">
+        <div class="code-header" style="background: #2d2d2d;">
+           <span class="text-muted small"><i class="fas fa-code me-2"></i>main.cpp</span>
+        </div>
+        <div class="code-content comparison-viewer" id="cpp-side">
+          <div class="sync-line" data-line="1"><span class="variable">cin</span> >> <span class="variable">age</span>;</div>
+          <div class="sync-line mt-2" data-line="2"><span class="keyword">if</span> (<span class="variable">age</span> >= 18) {</div>
+          <div class="sync-line ps-4" data-line="3"><span class="variable">cout</span> << <span class="string">"Eligible"</span>;</div>
+          <div class="sync-line" data-line="4">} <span class="keyword">else</span> {</div>
+          <div class="sync-line ps-4" data-line="5"><span class="variable">cout</span> << <span class="string">"Minor"</span>;</div>
+          <div class="sync-line" data-line="6">}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4 g-3">
+    <div class="col-md-4">
+      <div class="text-center p-3 border rounded-3 h-100 shadow-sm">
+        <i class="fas fa-terminal text-success mb-2 fs-4"></i>
+        <h6 class="fw-bold">Input Method</h6>
+        <p class="small text-muted mb-0"><code>READ</code> is simplified. In C++, we use <code>cin</code> (Character Input).</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="text-center p-3 border rounded-3 h-100 shadow-sm">
+        <i class="fas fa-code-branch text-primary mb-2 fs-4"></i>
+        <h6 class="fw-bold">Scope Control</h6>
+        <p class="small text-muted mb-0">Pseudocode uses <code>ENDIF</code>. C++ uses curly braces <code>{}</code> to group logic.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="text-center p-3 border rounded-3 h-100 shadow-sm">
+        <i class="fas fa-desktop text-warning mb-2 fs-4"></i>
+        <h6 class="fw-bold">Output Method</h6>
+        <p class="small text-muted mb-0"><code>DISPLAY</code> maps directly to <code>cout</code> (Character Output).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Styling for the comparison interaction */
+.comparison-viewer .sync-line {
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+/* The highlight color when hovering */
+.comparison-viewer .sync-line.highlight-active {
+    background: rgba(40, 167, 69, 0.2);
+    border-left: 3px solid #28a745;
+}
+
+#cpp-side .sync-line.highlight-active {
+    background: rgba(0, 123, 255, 0.25);
+    border-left: 3px solid #007bff;
+}
+</style>
+
+<script>
+document.querySelectorAll('.sync-line').forEach(line => {
+    line.addEventListener('mouseenter', function() {
+        const lineNum = this.getAttribute('data-line');
+        // Find all lines with the same data-line number and highlight them
+        document.querySelectorAll(`.sync-line[data-line="${lineNum}"]`).forEach(el => {
+            el.classList.add('highlight-active');
+        });
+    });
+
+    line.addEventListener('mouseleave', function() {
+        const lineNum = this.getAttribute('data-line');
+        // Remove highlight
+        document.querySelectorAll(`.sync-line[data-line="${lineNum}"]`).forEach(el => {
+            el.classList.remove('highlight-active');
+        });
+    });
+});
+</script>
+
+  <div class="text-center mt-5 mb-5 p-5 rounded-4 shadow" style="background: linear-gradient(120deg, #2f8d46, #246d35); color: white;">
+    <h3 class="fw-bold">Mastered the Writing?</h3>
+    <p>Now let's dive into the "Brain" of algorithms: How programs make decisions and repeat tasks.</p>
+    <a href="control.html" class="btn btn-warning btn-lg px-5 fw-bold mt-3">Go to Control Structures <i class="fas fa-arrow-right ms-2"></i></a>
+  </div>
+</main>
+
+<footer class="bg-dark text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h3 class="fw-bold mb-0">CSC402 Portal</h3>
+        <p class="text-secondary">Algorithmic Problem Solving Learning Tool</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="about.html" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+        <a href="about.html" class="text-white me-3"><i class="fab fa-github"></i></a>
+        <a href="about.html" class="text-white"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+    <hr class="my-4 border-secondary">
+    <div class="row small text-secondary">
+      <div class="col-md-6">© 2025 Algorithmic Problem Solving | UiTM Educational Purpose</div>
+      <div class="col-md-6 text-md-end">
+        <a href="index.html" class="text-secondary text-decoration-none me-2">Home</a>
+        <a href="quizzes.html" class="text-secondary text-decoration-none">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

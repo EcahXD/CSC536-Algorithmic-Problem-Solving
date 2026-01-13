@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowchart Logic | CSC402 Learning Portal</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --gf-green: #2f8d46;
+      --gf-dark-green: #246d35;
+      --gf-bg: #f4f7f6;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--gf-bg);
+      color: #333;
+      padding-top: 80px;
+    }
+
+    /* --- Navigation (Identical to Home/Basics) --- */
+    .navbar {
+      background: white !important;
+      border-bottom: 4px solid var(--gf-green);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand { font-weight: 800; color: var(--primary-color) !important; letter-spacing: -1px; }
+    .navbar-brand span { color: var(--gf-green); }
+    .nav-link { font-weight: 500; color: #444 !important; transition: 0.3s; margin: 0 5px; }
+    .nav-link:hover, .nav-link.active { color: var(--gf-green) !important; }
+
+    .btn-gf {
+      background-color: var(--gf-green) !important;
+      border-color: var(--gf-green) !important;
+      color: white !important;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-gf:hover {
+      background-color: var(--gf-dark-green) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(47, 141, 70, 0.3);
+    }
+
+    /* --- Page Header --- */
+    .page-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+      color: white;
+      padding: 100px 0;
+      position: relative;
+      margin-top: -80px;
+    }
+    .page-header::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      opacity: 0.1;
+    }
+
+    /* --- Content Components --- */
+    .content-card {
+      background: white;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      margin-bottom: 40px;
+      padding: 35px;
+    }
+    
+    .section-title {
+      border-left: 6px solid var(--gf-green);
+      padding-left: 20px;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* Symbol Flip Cards */
+    .symbol-card { height: 200px; perspective: 1000px; margin-bottom: 20px; }
+    .symbol-card-inner {
+      position: relative; width: 100%; height: 100%;
+      text-align: center; transition: 0.6s;
+      transform-style: preserve-3d; cursor: pointer;
+    }
+    .symbol-card:hover .symbol-card-inner { transform: rotateY(180deg); }
+    .symbol-front, .symbol-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 15px; padding: 20px; border: 1px solid #eee;
+    }
+    .symbol-front { background: white; }
+    .symbol-back { background: var(--gf-green); color: white; transform: rotateY(180deg); }
+    .symbol-img { max-height: 60px; margin-bottom: 15px; }
+
+    /* Comparison Table */
+    .gf-table { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .gf-table thead { background-color: var(--primary-color); color: white; }
+
+    footer { background: #1a1a1a; color: white; padding: 50px 0; }
+
+    /* Modal Overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content-wrapper {
+  position: relative;
+  overflow: hidden; /* For dragging boundaries */
+  cursor: grab;
+}
+
+.modal-content-wrapper img {
+  max-width: 90vw;
+  max-height: 80vh;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.modal-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.modal-controls button {
+  background: var(--gf-green);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.img-zoomable:hover {
+  transform: scale(1.05);
+  transition: 0.3s;
+}
+
+/* Custom ANSI Symbol Shapes */
+.flow-shape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Terminator: Capsule Shape */
+.shape-terminator {
+  width: 100px; height: 50px;
+  border-radius: 50px;
+  background: var(--gf-green);
+}
+
+/* Process: Rectangle */
+.shape-process {
+  width: 100px; height: 60px;
+  background: #007bff;
+}
+
+/* I/O: Parallelogram */
+.shape-io {
+  width: 100px; height: 60px;
+  background: #ffc107;
+  transform: skew(-20deg);
+}
+.shape-io i { transform: skew(20deg); } /* Keep icon straight */
+
+/* Decision: Diamond */
+.shape-decision {
+  width: 60px; height: 60px;
+  background: #dc3545;
+  transform: rotate(45deg);
+  margin-bottom: 25px !important; /* Extra space for rotation */
+}
+.shape-decision i { transform: rotate(-45deg); } /* Keep icon straight */
+
+/* Connector: Circle */
+.shape-connector {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: #6c757d;
+}
+
+/* Flowline: Simple arrow or line */
+.shape-line {
+  width: 80px; height: 10px;
+  background: #333;
+  position: relative;
+}
+.shape-line::after {
+  content: '';
+  position: absolute;
+  right: -10px; top: -5px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 15px solid #333;
+}
+
+/* Enhanced Rules Cards */
+.rule-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: 0.3s;
+    height: 100%;
+    background: #fff;
+}
+.rule-box:hover {
+    border-color: var(--gf-green);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+.rule-icon {
+    width: 45px;
+    height: 45px;
+    background: var(--gf-bg);
+    color: var(--gf-green);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+/* Logic Comparison Upgrade */
+.comparison-score {
+    height: 8px;
+    border-radius: 4px;
+    background: #eee;
+    margin-top: 10px;
+}
+.score-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--gf-green);
+}
+
+/* Versus Section Styles */
+.vs-container {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.vs-card {
+    flex: 1;
+    padding: 40px;
+    position: relative;
+}
+.vs-flowchart { background: #ffffff; border-right: 1px solid #eee; }
+.vs-pseudocode { background: #f8f9fa; }
+
+.vs-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--gf-green);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.vs-icon-circle {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.vs-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-color);
+    color: white;
+    width: 50px;
+    font-weight: 900;
+    font-style: italic;
+    z-index: 2;
+}
+
+.pro-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 0.9rem; }
+.pro-item i { color: #28a745; margin-right: 10px; margin-top: 4px; }
+.con-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 0.9rem; color: #666; }
+.con-item i { color: #dc3545; margin-right: 10px; margin-top: 4px; }
+
+@media (max-width: 992px) {
+    .vs-container { flex-direction: column; }
+    .vs-divider { width: 100%; height: 40px; }
+}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top py-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <i class="fas fa-terminal me-2"></i>CSC<span>402</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="basics.html">Basics</a></li>
+        <li class="nav-item"><a class="nav-link active" href="flowchart.html">Flowchart</a></li>
+        <li class="nav-item"><a class="nav-link" href="pseudocode.html">Pseudocode</a></li>
+        <li class="nav-item"><a class="nav-link" href="control.html">Control Structures</a></li>
+        <li class="nav-item"><a class="nav-link px-3 ms-lg-3 btn btn-gf text-white" href="quizzes.html">Practice Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header text-center">
+  <div class="container position-relative" style="z-index: 2;">
+    <h1 class="display-4 fw-bold mb-3">Visualizing Algorithm Flow</h1>
+    <p class="lead opacity-75">Level 02: Mapping Logic with Standardized Flowcharts</p>
+  </div>
+</header>
+
+<main class="container my-5">
+  <div class="content-card">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <h2 class="section-title">What is a Flowchart?</h2>
+        <p>A <strong>Flowchart</strong> is a type of diagram that represents an algorithm, workflow, or process. It shows the steps as boxes of various kinds, and their order by connecting them with arrows.</p>
+        <p>In <strong>CSC402</strong>, flowcharts are essential for capturing the "Execution Path" of a program—helping you see exactly where decisions are made and where loops repeat.</p>
+      </div>
+      <div class="col-lg-5">
+        <div class="ratio ratio-16x9 rounded-3 shadow-lg overflow-hidden">
+          <iframe src="https://www.youtube.com/embed/vBtGO9pXfrQ?si=Ikxo1DNTJWrHhj5_" title="Flowchart Guide" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+  <h2 class="section-title">Standard ANSI Symbols</h2>
+  <p class="mb-4 text-muted">Hover over each symbol to reveal its specific purpose in an algorithm.</p>
+  
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-4 col-lg-3 symbol-card">
+      <div class="symbol-card-inner">
+        <div class="symbol-front">
+          <div class="flow-shape shape-terminator">
+            <i class="fas fa-power-off"></i>
+          </div>
+          <h5 class="fw-bold">Terminator</h5>
+          <small class="text-muted">(Oval/Capsule)</small>
+        </div>
+        <div class="symbol-back">
+          <p class="small">Used to represent the <strong>START</strong> and <strong>END</strong> of the process.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-3 symbol-card">
+      <div class="symbol-card-inner">
+        <div class="symbol-front">
+          <div class="flow-shape shape-process">
+            <i class="fas fa-cog"></i>
+          </div>
+          <h5 class="fw-bold">Process</h5>
+          <small class="text-muted">(Rectangle)</small>
+        </div>
+        <div class="symbol-back">
+          <p class="small">Represents a <strong>calculation</strong> or assignment (e.g., Total = A + B).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-3 symbol-card">
+      <div class="symbol-card-inner">
+        <div class="symbol-front">
+          <div class="flow-shape shape-io">
+            <i class="fas fa-keyboard"></i>
+          </div>
+          <h5 class="fw-bold">Input/Output</h5>
+          <small class="text-muted">(Parallelogram)</small>
+        </div>
+        <div class="symbol-back">
+          <p class="small">Used for <strong>READ</strong> or <strong>DISPLAY</strong> operations.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-3 symbol-card">
+      <div class="symbol-card-inner">
+        <div class="symbol-front">
+          <div class="flow-shape shape-decision">
+            <i class="fas fa-question"></i>
+          </div>
+          <h5 class="fw-bold">Decision</h5>
+          <small class="text-muted">(Diamond)</small>
+        </div>
+        <div class="symbol-back">
+          <p class="small">A <strong>conditional</strong> step (If/Else). Leads to 'Yes' and 'No' paths.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-3 symbol-card">
+      <div class="symbol-card-inner">
+        <div class="symbol-front">
+          <div class="flow-shape shape-connector">
+            <i class="fas fa-link"></i>
+          </div>
+          <h5 class="fw-bold">Connector</h5>
+          <small class="text-muted">(Small Circle)</small>
+        </div>
+        <div class="symbol-back">
+          <p class="small">Connects different parts of a flowchart on the <strong>same page</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-lg-3 symbol-card">
+      <div class="symbol-card-inner">
+        <div class="symbol-front">
+          <div class="flow-shape shape-line"></div>
+          <h5 class="fw-bold">Flowline</h5>
+          <small class="text-muted">(Arrow)</small>
+        </div>
+        <div class="symbol-back">
+          <p class="small">Shows the <strong>direction</strong> of process execution.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="content-card">
+  <h2 class="section-title">Practical Flowchart Examples</h2>
+  <p class="mb-5 text-muted">Study how logic flows through different programming structures. <strong>Click an image to expand and zoom.</strong></p>
+
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="bg-light p-4 text-center">
+          <img src="Images/flowchart-sequence.png" alt="Sequence Flowchart" class="img-fluid rounded-3 mb-3 img-zoomable" onclick="openModal(this.src)" style="max-height: 250px; cursor: pointer;">
+        </div>
+        <div class="card-body">
+          <h5 class="fw-bold text-success"><i class="fas fa-layer-group me-2"></i>1. Sequence</h5>
+          <p class="small text-muted">The simplest flow where steps happen one after another. 
+            <br><strong>Example:</strong> Calculating the area of a rectangle.</p>
+          <ul class="small ps-3 text-secondary">
+            <li>Start &rarr; Input Length/Width</li>
+            <li>Process Area = L * W</li>
+            <li>Output Area &rarr; End</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="bg-light p-4 text-center">
+          <img src="Images/flowchart-selection.png" alt="Selection Flowchart" class="img-fluid rounded-3 mb-3 img-zoomable" onclick="openModal(this.src)" style="max-height: 250px; cursor: pointer;">
+        </div>
+        <div class="card-body">
+          <h5 class="fw-bold text-danger"><i class="fas fa-code-branch me-2"></i>2. Selection</h5>
+          <p class="small text-muted">Uses a <strong>Decision Diamond</strong> to branch the logic based on a condition.
+            <br><strong>Example:</strong> Pass/Fail grading system.</p>
+          <ul class="small ps-3 text-secondary">
+            <li>Condition: Is Mark >= 50?</li>
+            <li>Yes: Display "Pass"</li>
+            <li>No: Display "Fail"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="bg-light p-4 text-center">
+          <img src="Images/flowchart-loop.png" alt="Repetition Flowchart" class="img-fluid rounded-3 mb-3 img-zoomable" onclick="openModal(this.src)" style="max-height: 250px; cursor: pointer;">
+        </div>
+        <div class="card-body">
+          <h5 class="fw-bold text-primary"><i class="fas fa-redo-alt me-2"></i>3. Repetition</h5>
+          <p class="small text-muted">Also known as a <strong>Loop</strong>. Steps are repeated until a condition is met.
+            <br><strong>Example:</strong> Displaying "Hello" 5 times.</p>
+          <ul class="small ps-3 text-secondary">
+            <li>Start &rarr; Set count = 1</li>
+            <li>Check: Is count <= 5?</li>
+            <li>If Yes: Display "Hello" &rarr; count + 1 &rarr; Loop back</li>
+            <li>If No: End Loop</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="flowchartModal" class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-content-wrapper">
+    <img id="modalImg" src="" alt="Zoomed Flowchart">
+    <div class="modal-controls">
+      <button onclick="zoomIn(event)"><i class="fas fa-search-plus"></i></button>
+      <button onclick="zoomOut(event)"><i class="fas fa-search-minus"></i></button>
+      <button onclick="resetZoom(event)"><i class="fas fa-sync-alt"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="content-card">
+    <h2 class="section-title">Design Principles & Rules</h2>
+    <p class="text-muted mb-4">Adhering to these industry standards ensures your logic is technically sound and exam-ready.</p>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="rule-box">
+                <div class="rule-icon"><i class="fas fa-compass"></i></div>
+                <h6 class="fw-bold">Directional Flow</h6>
+                <p class="small text-secondary m-0">Logic must strictly flow <strong>Top-to-Bottom</strong> or <strong>Left-to-Right</strong>. Avoid upward flowlines except in Repetition loops.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rule-box">
+                <div class="rule-icon"><i class="fas fa-door-open"></i></div>
+                <h6 class="fw-bold">Single Entry/Exit</h6>
+                <p class="small text-secondary m-0">A valid algorithm must have exactly <strong>one</strong> Start and <strong>one</strong> End point to prevent logical deadlocks.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rule-box">
+                <div class="rule-icon"><i class="fas fa-draw-polygon"></i></div>
+                <h6 class="fw-bold">Standard Geometry</h6>
+                <p class="small text-secondary m-0">Only use authorized ANSI shapes. A process must be a rectangle; an I/O operation <strong>must</strong> be a parallelogram.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rule-box">
+                <div class="rule-icon"><i class="fas fa-code-branch"></i></div>
+                <h6 class="fw-bold">Decision Binary</h6>
+                <p class="small text-secondary m-0">Every decision diamond must result in exactly <strong>two</strong> paths: True (Yes) and False (No).</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rule-box">
+                <div class="rule-icon"><i class="fas fa-language"></i></div>
+                <h6 class="fw-bold">Language Independent</h6>
+                <p class="small text-secondary m-0">Avoid specific programming syntax (like <code>printf</code> or <code>cin</code>). Use generic terms like <strong>Read</strong> or <strong>Display</strong>.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rule-box">
+                <div class="rule-icon"><i class="fas fa-project-diagram"></i></div>
+                <h6 class="fw-bold">Logical Integrity</h6>
+                <p class="small text-secondary m-0">Flowlines must not cross. Use <strong>Connectors</strong> if the diagram becomes too complex for one area.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-card border-0 p-0 overflow-hidden">
+    <div class="vs-container">
+        <div class="vs-card vs-flowchart">
+            <span class="vs-badge">Visual Logic</span>
+            <div class="vs-icon-circle bg-success bg-opacity-10 text-success">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h3 class="fw-bold">Flowchart</h3>
+            <p class="text-muted small">Best for conceptualizing the execution path and branching logic.</p>
+            
+            <hr>
+            <div class="pro-item"><i class="fas fa-check-circle"></i> <span><strong>Superior Clarity:</strong> Perfect for showing complex "If-Then-Else" paths visually.</span></div>
+            <div class="pro-item"><i class="fas fa-check-circle"></i> <span><strong>Error Detection:</strong> Easy to spot "infinite loops" or dead-ends in logic.</span></div>
+            
+            <div class="con-item"><i class="fas fa-times-circle"></i> <span><strong>High Effort:</strong> Time-consuming to draw and very difficult to modify.</span></div>
+        </div>
+
+        <div class="vs-divider">VS</div>
+
+        <div class="vs-card vs-pseudocode">
+            <span class="vs-badge" style="background: var(--primary-color);">Textual Logic</span>
+            <div class="vs-icon-circle bg-dark bg-opacity-10 text-dark">
+                <i class="fas fa-file-code"></i>
+            </div>
+            <h3 class="fw-bold">Pseudocode</h3>
+            <p class="text-muted small">Best for detailed mathematical steps and preparing for actual coding.</p>
+            
+            <hr>
+            <div class="pro-item"><i class="fas fa-check-circle"></i> <span><strong>Highly Scalable:</strong> Can handle massive algorithms without getting "messy."</span></div>
+            <div class="pro-item"><i class="fas fa-check-circle"></i> <span><strong>Fast Iteration:</strong> Easy to type, edit, and update on the fly.</span></div>
+            
+            <div class="con-item"><i class="fas fa-times-circle"></i> <span><strong>Logical Blindspots:</strong> Complex nested loops are harder to "trace" mentally than a diagram.</span></div>
+        </div>
+    </div>
+
+    <div class="p-4 bg-white border-top">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <i class="fas fa-lightbulb text-warning fa-3x mb-3 mb-md-0"></i>
+            </div>
+            <div class="col-md-10">
+                <h5 class="fw-bold mb-1">CSC402 Pro-Tip: Which one should I use?</h5>
+                <p class="small text-secondary mb-0">
+                    Use <strong>Flowcharts</strong> during the initial design phase to confirm your logic flow with your team. Switch to <strong>Pseudocode</strong> when you are ready to finalize details like variable assignments and mathematical formulas before writing actual C++/Java code.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <div class="text-center mt-5 mb-5 p-5 rounded-4 shadow" style="background: linear-gradient(120deg, #2c3e50, #1a1a1a); color: white;">
+    <h3 class="fw-bold">Logic Translated to Text</h3>
+    <p>Finished your diagram? Now learn how to write it in a structured, human-readable format.</p>
+    <a href="pseudocode.html" class="btn btn-gf btn-lg px-5 fw-bold mt-3">Continue to Pseudocode <i class="fas fa-arrow-right ms-2"></i></a>
+  </div>
+</main>
+
+<footer class="bg-dark text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h3 class="fw-bold mb-0">CSC402 Portal</h3>
+        <p class="text-secondary">Algorithmic Problem Solving Learning Tool</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="about.html" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+        <a href="about.html" class="text-white me-3"><i class="fab fa-github"></i></a>
+        <a href="about.html" class="text-white"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+    <hr class="my-4 border-secondary">
+    <div class="row small text-secondary">
+      <div class="col-md-6">© 2025 Algorithmic Problem Solving | UiTM Educational Purpose</div>
+      <div class="col-md-6 text-md-end">
+        <a href="index.html" class="text-secondary text-decoration-none me-2">Home</a>
+        <a href="quizzes.html" class="text-secondary text-decoration-none">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  let zoomLevel = 1;
+const modal = document.getElementById("flowchartModal");
+const modalImg = document.getElementById("modalImg");
+
+function openModal(src) {
+  modal.style.display = "flex";
+  modalImg.src = src;
+  zoomLevel = 1;
+  modalImg.style.transform = `scale(${zoomLevel})`;
+}
+
+function closeModal(e) {
+  // Only close if clicking the dark background (overlay)
+  if (e.target.id === "flowchartModal" || e.target.className === "modal-content-wrapper") {
+    modal.style.display = "none";
+  }
+}
+
+function zoomIn(e) {
+  e.stopPropagation();
+  zoomLevel += 0.2;
+  modalImg.style.transform = `scale(${zoomLevel})`;
+}
+
+function zoomOut(e) {
+  e.stopPropagation();
+  if (zoomLevel > 0.4) {
+    zoomLevel -= 0.2;
+    modalImg.style.transform = `scale(${zoomLevel})`;
+  }
+}
+
+function resetZoom(e) {
+  e.stopPropagation();
+  zoomLevel = 1;
+  modalImg.style.transform = `scale(${zoomLevel})`;
+}
+
+// Basic Dragging Logic
+let isDragging = false;
+let startX, startY, translateX = 0, translateY = 0;
+
+modalImg.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  startX = e.clientX - translateX;
+  startY = e.clientY - translateY;
+  modalImg.style.cursor = 'grabbing';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  translateX = e.clientX - startX;
+  translateY = e.clientY - startY;
+  modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${zoomLevel})`;
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  modalImg.style.cursor = 'grab';
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

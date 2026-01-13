@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algorithm Basics | CSC402 Learning Portal</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- 1. CORE VARIABLES & GLOBAL STYLES --- */
+    :root {
+      --primary-color: #2c3e50;
+      --gf-green: #2f8d46;
+      --gf-dark-green: #246d35;
+      --gf-bg: #f4f7f6;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--gf-bg);
+      color: #333;
+      padding-top: 80px;
+    }
+
+    /* --- 2. NAVIGATION (Standardized) --- */
+    .navbar {
+      background: white !important;
+      border-bottom: 4px solid var(--gf-green);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand { 
+      font-weight: 800; 
+      color: var(--primary-color) !important; 
+      letter-spacing: -1px;
+    }
+    .navbar-brand span { color: var(--gf-green); }
+    
+    .nav-link {
+      font-weight: 500;
+      color: #444 !important;
+      transition: 0.3s;
+      margin: 0 5px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--gf-green) !important;
+    }
+
+    .btn-gf {
+      background-color: var(--gf-green) !important;
+      border-color: var(--gf-green) !important;
+      color: white !important;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-gf:hover {
+      background-color: var(--gf-dark-green) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(47, 141, 70, 0.3);
+    }
+
+    /* --- 3. PAGE HEADER --- */
+    .page-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+      color: white;
+      padding: 100px 0;
+      position: relative;
+      margin-top: -80px;
+    }
+    .page-header::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      opacity: 0.1;
+    }
+
+    /* --- 4. CONTENT CARDS & COMPONENTS --- */
+    .content-card {
+      background: white;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      margin-bottom: 40px;
+      padding: 35px;
+      transition: 0.3s;
+    }
+    
+    .section-title {
+      border-left: 6px solid var(--gf-green);
+      padding-left: 20px;
+      margin-bottom: 30px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* --- 5. IPO ANALYSIS PHASE STYLES --- */
+    .analysis-step {
+      background: #f8f9fa;
+      border-left: 4px solid var(--gf-green);
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .analysis-step:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-color: var(--gf-green);
+      background: #f9fffb;
+    }
+    .step-num {
+      background: var(--gf-green);
+      color: white;
+      width: 35px; height: 35px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .img-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid #eee;
+    }
+
+    /* --- 6. DATA TABLES --- */
+    .gf-table { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .gf-table thead { background-color: var(--gf-green); color: white; }
+
+    /* --- 7. VS CODE & INTERACTIVE LAB STYLES --- */
+    .vscode-window {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      color: #d4d4d4;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+      margin-bottom: 15px;
+    }
+    .vscode-header {
+      color: #858585;
+      font-size: 0.8rem;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .code-input {
+      background: #2d2d2d;
+      border: 1px solid #444;
+      color: #ce9178; 
+      width: 75px;
+      border-radius: 4px;
+      padding: 2px 5px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .code-input:focus {
+      outline: none;
+      border-color: var(--gf-green);
+      background: #3d3d3d;
+    }
+    .code-keyword { color: #569cd6; } 
+    .code-type { color: #4ec9b0; }    
+    .code-string { color: #ce9178; }  
+    .code-comment { color: #6a9955; font-style: italic; } 
+    .code-func { color: #dcdcaa; }    
+
+    .terminal-box {
+      background: #000;
+      color: #0f0; 
+      font-family: 'Courier New', monospace;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      min-height: 50px;
+      border: 1px solid #333;
+      margin-bottom: 30px;
+    }
+    .run-btn {
+      background-color: var(--gf-green);
+      color: white;
+      border: none;
+      padding: 5px 15px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .run-btn:hover { background-color: var(--gf-dark-green); }
+    .example-divider { border-top: 2px dashed #eee; margin: 40px 0; }
+
+    /* --- 8. PDLC LOOP LAYOUT --- */
+    .pdlc-loop-container {
+        max-width: 850px;
+        margin: 40px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    .pdlc-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .pdlc-vertical-connectors {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 90px;
+        color: var(--gf-green);
+        font-size: 1.2rem;
+    }
+    .pdlc-flip-card {
+        background-color: transparent;
+        perspective: 1000px;
+        width: 220px;
+        height: 140px;
+    }
+    .pdlc-flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+    }
+    .pdlc-flip-card:hover .pdlc-flip-card-inner { transform: rotateY(180deg); }
+    .pdlc-card-front, .pdlc-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 15px;
+        border: 2px solid #eee;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    .pdlc-card-front { background: white; color: var(--primary-color); }
+    .pdlc-card-back { 
+        background: var(--gf-green); 
+        color: white; 
+        transform: rotateY(180deg); 
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+    .arrow-horiz { color: var(--gf-green); font-size: 1.5rem; font-weight: bold; }
+
+    /* --- 9. FOOTER --- */
+    footer { background: #1a1a1a; color: white; padding: 50px 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top py-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <i class="fas fa-terminal me-2"></i>CSC<span>402</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="basics.html">Basics</a></li>
+        <li class="nav-item"><a class="nav-link" href="flowchart.html">Flowchart</a></li>
+        <li class="nav-item"><a class="nav-link" href="pseudocode.html">Pseudocode</a></li>
+        <li class="nav-item"><a class="nav-link" href="control.html">Control Structures</a></li>
+        <li class="nav-item"><a class="nav-link px-3 ms-lg-3 btn btn-gf text-white" href="quizzes.html">Practice Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header text-center">
+  <div class="container position-relative" style="z-index: 2;">
+    <h1 class="display-4 fw-bold mb-3">Foundations of Problem Solving</h1>
+    <p class="lead opacity-75">Level 01: Mastering the Logic Before the Code</p>
+  </div>
+</header>
+
+<main class="container my-5">
+  <div class="content-card">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h2 class="section-title">Why Learn Algorithms?</h2>
+        <p>Every software, app, and AI starts as an algorithm. It is the <strong>logical blueprint</strong> of a program. Before you touch a keyboard, you must master the art of breaking a complex problem into simple, executable instructions.</p>
+        <div class="alert alert-info border-0 shadow-sm">
+            <i class="fas fa-info-circle me-2"></i> <strong>Key Fact:</strong> An algorithm is language-independent. You can write an algorithm and implement it in C++, Python, or Java!
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="ratio ratio-16x9 rounded-3 shadow-lg overflow-hidden">
+            <iframe src="https://www.youtube.com/embed/6hfOvs8pY1k?si=PkXURAwE_kv3yBBl" title="Algorithm Basics" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <h2 class="section-title">The Analysis Phase: How to Start?</h2>
+    <p class="mb-4 text-muted">In <strong>CSC402</strong>, problem-solving starts with the "Analysis" step of the PDLC. We use the <strong>IPO Model</strong> to break down a problem into three core components.</p>
+    
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="analysis-step h-100">
+          <div class="step-num">1</div>
+          <div>
+            <h5 class="fw-bold">Inputs</h5>
+            <p class="small text-muted mb-0">What data do we need from the user? <br><strong>e.g., Radius of a circle, User's age.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="analysis-step h-100">
+          <div class="step-num">2</div>
+          <div>
+            <h5 class="fw-bold">Processes</h5>
+            <p class="small text-muted mb-0">What formulas or logic are needed? <br><strong>e.g., $$Area = 3.14159 \times r^2$$</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="analysis-step h-100">
+          <div class="step-num">3</div>
+          <div>
+            <h5 class="fw-bold">Outputs</h5>
+            <p class="small text-muted mb-0">What information must be displayed? <br><strong>e.g., Display "The Area is...".</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-2">
+      <div class="img-container d-inline-block shadow-sm">
+        <img src="Images/Input-Process Image.jpeg" alt="Input Process Output Model" class="img-fluid rounded-4" style="max-height: 350px;">
+      </div>
+      <p class="text-muted small mt-3">Figure 1: The Standard Input-Process-Output (IPO) Model used in CSC402</p>
+    </div>
+  </div>
+
+  <div class="content-card bg-light">
+    <h2 class="section-title">Variables & Data Types</h2>
+    <div class="table-responsive gf-table">
+        <table class="table table-hover bg-white mb-0">
+            <thead>
+                <tr>
+                    <th>Data Type</th>
+                    <th>Description</th>
+                    <th>Example in Algorithm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="fw-bold text-primary">Integer</td><td>Whole numbers</td><td><code>count = 10</code></td></tr>
+                <tr><td class="fw-bold text-primary">Float / Double</td><td>Decimal points</td><td><code>price = 19.99</code></td></tr>
+                <tr><td class="fw-bold text-primary">String / Char</td><td>Text data</td><td><code>name = "Ali"</code></td></tr>
+                <tr><td class="fw-bold text-primary">Boolean</td><td>True or False</td><td><code>is_passed = True</code></td></tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <h2 class="section-title">Practical Algorithm Lab</h2>
+    <p class="mb-5">Explore how IPO charts translate into real C++ code. Adjust the <strong>orange values</strong> in the code and click run!</p>
+
+    <div class="example-box">
+      <h4 class="fw-bold text-primary mb-4">1. Calculating Circle Area</h4>
+      <div class="row">
+        <div class="col-md-5">
+          <h5 class="small fw-bold text-muted uppercase">IPO Chart</h5>
+          <table class="table table-bordered small">
+            <thead class="table-light"><tr><th>Input</th><th>Process</th><th>Output</th></tr></thead>
+            <tbody><tr><td>radius</td><td>3.14159 * r * r</td><td>area</td></tr></tbody>
+          </table>
+        </div>
+        <div class="col-md-7">
+          <div class="vscode-window">
+            <div class="vscode-header"><span>main.cpp</span><button class="run-btn" onclick="runCircle()">▶ Run Code</button></div>
+            <code>
+              <span class="code-type">float</span> radius = <input type="number" id="inputRadius" class="code-input" value="7">;<br>
+              <span class="code-type">float</span> area = <span class="code-type">3.14159</span> * radius * radius;<br><br>
+              <span class="code-func">cout</span> << <span class="code-string">"The area is: "</span> << area;
+            </code>
+          </div>
+          <div class="terminal-box" id="outputCircle">C:\User\Student> _</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-divider"></div>
+
+    <div class="example-box">
+      <h4 class="fw-bold text-primary mb-4">2. E-Commerce Sales Tax</h4>
+      <div class="row">
+        <div class="col-md-5">
+          <h5 class="small fw-bold text-muted uppercase">IPO Chart</h5>
+          <table class="table table-bordered small">
+            <thead class="table-light"><tr><th>Input</th><th>Process</th><th>Output</th></tr></thead>
+            <tbody><tr><td>price, tax</td><td>price + (price * tax)</td><td>total</td></tr></tbody>
+          </table>
+        </div>
+        <div class="col-md-7">
+          <div class="vscode-window">
+            <div class="vscode-header"><span>store.cpp</span><button class="run-btn" onclick="runStore()">▶ Run Code</button></div>
+            <code>
+              <span class="code-type">float</span> price = <input type="number" id="inputPrice" class="code-input" value="100">;<br>
+              <span class="code-type">float</span> tax = <span class="code-type">0.06</span>;<br>
+              <span class="code-type">float</span> total = price + (price * tax);<br><br>
+              <span class="code-func">cout</span> << <span class="code-string">"Total: RM"</span> << total;
+            </code>
+          </div>
+          <div class="terminal-box" id="outputStore">C:\User\Student> _</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-divider"></div>
+
+    <div class="example-box">
+      <h4 class="fw-bold text-primary mb-4">3. Student Grading System</h4>
+      <div class="row">
+        <div class="col-md-5">
+          <h5 class="small fw-bold text-muted uppercase">IPO Chart</h5>
+          <table class="table table-bordered small">
+            <thead class="table-light"><tr><th>Input</th><th>Process</th><th>Output</th></tr></thead>
+            <tbody><tr><td>mark</td><td>If mark >= 50...</td><td>"PASS"/"FAIL"</td></tr></tbody>
+          </table>
+        </div>
+        <div class="col-md-7">
+          <div class="vscode-window">
+            <div class="vscode-header"><span>grading.cpp</span><button class="run-btn" onclick="runGrade()">▶ Run Code</button></div>
+            <code>
+              <span class="code-type">int</span> mark = <input type="number" id="inputMark" class="code-input" value="45">;<br><br>
+              <span class="code-keyword">if</span> (mark >= <span class="code-type">50</span>) {<br>
+              &nbsp;&nbsp;<span class="code-func">cout</span> << <span class="code-string">"Result: PASS"</span>;<br>
+              } <span class="code-keyword">else</span> {<br>
+              &nbsp;&nbsp;<span class="code-func">cout</span> << <span class="code-string">"Result: FAIL"</span>;<br>
+              }
+            </code>
+          </div>
+          <div class="terminal-box" id="outputGrade">C:\User\Student> _</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+      <h2 class="section-title">The PDLC Roadmap</h2>
+      <p>Follow the arrows to see how a program is developed in a continuous cycle.</p>
+
+      <div class="pdlc-loop-container">
+          <div class="pdlc-row">
+              <div class="pdlc-flip-card">
+                  <div class="pdlc-flip-card-inner">
+                      <div class="pdlc-card-front"><i class="fas fa-search fa-2x text-primary mb-2"></i><p class="fw-bold m-0">1. Analysis</p></div>
+                      <div class="pdlc-card-back">Define the problem and gather requirements.</div>
+                  </div>
+              </div>
+              <div class="arrow-horiz"><i class="fas fa-chevron-right"></i></div>
+              <div class="pdlc-flip-card">
+                  <div class="pdlc-flip-card-inner">
+                      <div class="pdlc-card-front"><i class="fas fa-pencil-ruler fa-2x text-success mb-2"></i><p class="fw-bold m-0">2. Design</p></div>
+                      <div class="pdlc-card-back">Plan logic using Flowcharts/Pseudocode.</div>
+                  </div>
+              </div>
+              <div class="arrow-horiz"><i class="fas fa-chevron-right"></i></div>
+              <div class="pdlc-flip-card">
+                  <div class="pdlc-flip-card-inner">
+                      <div class="pdlc-card-front"><i class="fas fa-code fa-2x text-warning mb-2"></i><p class="fw-bold m-0">3. Coding</p></div>
+                      <div class="pdlc-card-back">Translate design into C++ source code.</div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="pdlc-vertical-connectors">
+              <div class="arrow-vert"><i class="fas fa-long-arrow-alt-up"></i></div>
+              <div class="arrow-vert"><i class="fas fa-long-arrow-alt-down"></i></div>
+          </div>
+
+          <div class="pdlc-row">
+              <div class="pdlc-flip-card">
+                  <div class="pdlc-flip-card-inner">
+                      <div class="pdlc-card-front"><i class="fas fa-file-alt fa-2x text-secondary mb-2"></i><p class="fw-bold m-0">6. Documentation</p></div>
+                      <div class="pdlc-card-back">Write manuals for users and developers.</div>
+                  </div>
+              </div>
+              <div class="arrow-horiz"><i class="fas fa-chevron-left"></i></div>
+              <div class="pdlc-flip-card">
+                  <div class="pdlc-flip-card-inner">
+                      <div class="pdlc-card-front"><i class="fas fa-tools fa-2x text-info mb-2"></i><p class="fw-bold m-0">5. Maintenance</p></div>
+                      <div class="pdlc-card-back">Fix bugs and update the software.</div>
+                  </div>
+              </div>
+              <div class="arrow-horiz"><i class="fas fa-chevron-left"></i></div>
+              <div class="pdlc-flip-card">
+                  <div class="pdlc-flip-card-inner">
+                      <div class="pdlc-card-front"><i class="fas fa-vial fa-2x text-danger mb-2"></i><p class="fw-bold m-0">4. Testing</p></div>
+                      <div class="pdlc-card-back">Run the program to find and fix errors.</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="text-center mt-5 mb-5 p-5 rounded-4 shadow" style="background: linear-gradient(120deg, #2f8d46, #246d35); color: white;">
+    <h3 class="fw-bold">Ready to Visualize Your Logic?</h3>
+    <p>Now that you've mastered the basics of IPO and Variables, let's learn how to draw them.</p>
+    <a href="flowchart.html" class="btn btn-warning btn-lg px-5 fw-bold mt-3">Go to Flowcharts <i class="fas fa-arrow-right ms-2"></i></a>
+  </div>
+</main>
+
+<footer class="bg-dark text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h3 class="fw-bold mb-0">CSC402 Portal</h3>
+        <p class="text-secondary">Algorithmic Problem Solving Learning Tool</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="about.html" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+        <a href="about.html" class="text-white me-3"><i class="fab fa-github"></i></a>
+        <a href="about.html" class="text-white"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+    <hr class="my-4 border-secondary">
+    <div class="row small text-secondary">
+      <div class="col-md-6">© 2025 Algorithmic Problem Solving | UiTM Educational Purpose</div>
+      <div class="col-md-6 text-md-end">
+        <a href="index.html" class="text-secondary text-decoration-none me-2">Home</a>
+        <a href="quizzes.html" class="text-secondary text-decoration-none">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Lab Function 1: Circle Area
+  function runCircle() {
+    const r = document.getElementById('inputRadius').value;
+    const res = 3.14159 * r * r;
+    document.getElementById('outputCircle').innerHTML = "The area is: " + res.toFixed(2);
+  }
+
+  // Lab Function 2: E-Commerce Store
+  function runStore() {
+    const p = parseFloat(document.getElementById('inputPrice').value);
+    const res = p + (p * 0.06);
+    document.getElementById('outputStore').innerHTML = "Total include tax: RM" + res.toFixed(2);
+  }
+
+  // Lab Function 3: Student Grading
+  function runGrade() {
+    const m = document.getElementById('inputMark').value;
+    const res = m >= 50 ? "Result: PASS" : "Result: FAIL";
+    document.getElementById('outputGrade').innerHTML = res;
+  }
+</script>
+</body>
+</html>

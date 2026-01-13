@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSC402 | Algorithmic Problem Solving Portal</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --gf-green: #2f8d46;
+      --gf-dark-green: #246d35;
+      --gf-bg: #f4f7f6;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--gf-bg);
+      color: #333;
+      padding-top: 80px; /* Added to prevent content from hiding under fixed nav */
+    }
+
+    /* --- Standardized Navigation (Same as Basics.html) --- */
+    .navbar {
+      background: white !important;
+      border-bottom: 4px solid var(--gf-green);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand { 
+        font-weight: 800; 
+        color: var(--primary-color) !important; 
+        letter-spacing: -1px;
+    }
+    .navbar-brand span { color: var(--gf-green); }
+    
+    .nav-link {
+      font-weight: 500;
+      color: #444 !important;
+      transition: 0.3s;
+      margin: 0 5px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--gf-green) !important;
+    }
+
+    /* Button Styling to Match Basics.html */
+    .btn-gf {
+      background-color: var(--gf-green) !important;
+      border-color: var(--gf-green) !important;
+      color: white !important;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-gf:hover {
+      background-color: var(--gf-dark-green) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(47, 141, 70, 0.3);
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+      color: white;
+      padding: 100px 0;
+      position: relative;
+      overflow: hidden;
+      margin-top: -80px; /* Offsets the body padding for hero only */
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+      opacity: 0.2;
+    }
+    .hero h1 { font-size: 3.5rem; }
+
+    /* --- Components --- */
+    .feature-card {
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      border-color: var(--gf-green);
+    }
+    .icon-wrapper {
+      width: 60px; height: 60px;
+      background: rgba(47, 141, 70, 0.1);
+      color: var(--gf-green);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .code-window {
+      background: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+    .code-header {
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      display: flex; gap: 6px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+    .video-container {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top py-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <i class="fas fa-terminal me-2"></i>CSC<span>402</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="basics.html">Basics</a></li>
+        <li class="nav-item"><a class="nav-link" href="flowchart.html">Flowchart</a></li>
+        <li class="nav-item"><a class="nav-link" href="pseudocode.html">Pseudocode</a></li>
+        <li class="nav-item"><a class="nav-link" href="control.html">Control Structures</a></li>
+        <li class="nav-item"><a class="nav-link px-3 ms-lg-3 btn btn-gf text-white" href="quizzes.html">Practice Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container position-relative" style="z-index: 2;">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <span class="badge bg-success mb-3 px-3 py-2">Master Problem Solving</span>
+        <h1 class="fw-bold mb-4">Mastering <span style="color:var(--gf-green)">CSC402</span>: Algorithmic Logic</h1>
+        <p class="lead mb-5 opacity-75">Bridge the gap between human thought and computer execution. Learn to analyze, design, and validate algorithms with professional precision.</p>
+        <div class="d-flex gap-3">
+          <a href="basics.html" class="btn btn-gf btn-lg px-4">Start Learning</a>
+          <a href="#video-intro" class="btn btn-outline-light btn-lg px-4"><i class="fas fa-play me-2"></i>Watch Intro</a>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="code-window">
+          <div class="code-header">
+            <div class="dot bg-danger"></div>
+            <div class="dot bg-warning"></div>
+            <div class="dot bg-success"></div>
+            <span class="ms-2 text-secondary small">algorithm_design.py</span>
+          </div>
+          <code class="text-white">
+            <span style="color: #c678dd;">def</span> <span style="color: #61afef;">solve_problem</span>(data):<br>
+            &nbsp;&nbsp;<span style="color: #5c6370;"># 1. Identify Input</span><br>
+            &nbsp;&nbsp;input_set = validate(data)<br><br>
+            &nbsp;&nbsp;<span style="color: #5c6370;"># 2. Process Logic</span><br>
+            &nbsp;&nbsp;<span style="color: #c678dd;">while</span> input_set.has_items():<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;apply_algorithm(input_set)<br><br>
+            &nbsp;&nbsp;<span style="color: #c678dd;">return</span> solution
+          </code>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="py-5" id="video-intro">
+  <div class="container py-5">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6">
+        <div class="video-container">
+          <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/oz9cEqFynHU?si=D_DmEovEcsMUq6rl" title="Intro to Algorithms" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <h2 class="fw-bold mb-4">Interactive Learning Approach</h2>
+        <p>In <strong>CSC402</strong>, we don't just write code. We build blueprints. This site uses multimedia elements to help you visualize data flow through:</p>
+        <ul class="list-unstyled">
+          <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> <strong>Visual Flowcharts:</strong> See the path of execution.</li>
+          <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> <strong>Pseudocode Simulators:</strong> Human-readable logic.</li>
+          <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> <strong>Multimedia Quizzes:</strong> Instant feedback on your logic.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white py-5">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Course Curriculum</h2>
+      <p class="text-muted">Structured specifically for the UiTM CSC402 Syllabus</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card p-4 h-100" onclick="location.href='basics.html'">
+          <div class="icon-wrapper"><i class="fas fa-lightbulb"></i></div>
+          <h4 class="fw-bold">01. Problem Basics</h4>
+          <p class="text-muted small">Understand Problem Analysis, IPO Charts, and determining constraints.</p>
+          <span class="text-success fw-bold">Learn More <i class="fas fa-arrow-right ms-1"></i></span>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card p-4 h-100" onclick="location.href='flowchart.html'">
+          <div class="icon-wrapper" style="color:#e67e22; background:rgba(230,126,34,0.1);"><i class="fas fa-project-diagram"></i></div>
+          <h4 class="fw-bold">02. Flowcharts</h4>
+          <p class="text-muted small">Visual logic using ANSI standard symbols: Decision diamonds and Process rectangles.</p>
+          <span class="text-success fw-bold">Learn More <i class="fas fa-arrow-right ms-1"></i></span>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card p-4 h-100" onclick="location.href='pseudocode.html'">
+          <div class="icon-wrapper" style="color:#9b59b6; background:rgba(155,89,182,0.1);"><i class="fas fa-file-code"></i></div>
+          <h4 class="fw-bold">03. Pseudocode</h4>
+          <p class="text-muted small">Learn the bridge between English and Code. Structured logic without syntax errors.</p>
+          <span class="text-success fw-bold">Learn More <i class="fas fa-arrow-right ms-1"></i></span>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card p-4 h-100" onclick="location.href='control.html'">
+          <div class="icon-wrapper" style="color:#3498db; background:rgba(52,152,219,0.1);"><i class="fas fa-code-branch"></i></div>
+          <h4 class="fw-bold">04. Control Structures</h4>
+          <p class="text-muted small">Master the logic of Selection (If-Else) and Repetition (Loops) to control program flow.</p>
+          <span class="text-success fw-bold">Learn More <i class="fas fa-arrow-right ms-1"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="bg-dark text-white py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h3 class="fw-bold mb-0">CSC402 Portal</h3>
+        <p class="text-secondary">Algorithmic Problem Solving Learning Tool</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="about.html" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+        <a href="about.html" class="text-white me-3"><i class="fab fa-github"></i></a>
+        <a href="about.html" class="text-white"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+    <hr class="my-4 border-secondary">
+    <div class="row small text-secondary">
+      <div class="col-md-6">© 2025 Algorithmic Problem Solving | UiTM Educational Purpose</div>
+      <div class="col-md-6 text-md-end">
+        <a href="index.html" class="text-secondary text-decoration-none me-2">Home</a>
+        <a href="quizzes.html" class="text-secondary text-decoration-none">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

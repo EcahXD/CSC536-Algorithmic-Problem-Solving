@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Quiz | CSC402 Learning Portal</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --gf-green: #2f8d46;
+      --gf-dark-green: #246d35;
+      --gf-bg: #f4f7f6;
+      --dark-gray: #1a1a1a;
+      /* Code Colors */
+      --code-keyword: #c678dd;
+      --code-var: #e06c75;
+      --code-text: #abb2bf;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--gf-bg);
+      color: #333;
+      padding-top: 80px;
+    }
+
+    /* --- Navbar Styling --- */
+    .navbar {
+      background: white !important;
+      border-bottom: 4px solid var(--gf-green);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand { font-weight: 800; color: var(--primary-color) !important; letter-spacing: -1px; }
+    .navbar-brand span { color: var(--gf-green); }
+    .nav-link { font-weight: 500; color: #444 !important; transition: 0.3s; margin: 0 5px; }
+    .nav-link:hover, .nav-link.active { color: var(--gf-green) !important; }
+
+    .btn-nav-quiz {
+      background-color: white !important;
+      color: var(--gf-green) !important;
+      border: 2px solid var(--gf-green) !important;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-nav-quiz:hover {
+      background-color: var(--gf-green) !important;
+      color: white !important;
+    }
+
+    /* --- Page Header --- */
+    .page-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+      color: white;
+      padding: 120px 0;
+      position: relative;
+      margin-top: -80px;
+    }
+
+    /* --- Quiz Cards --- */
+    .quiz-container { max-width: 850px; margin: auto; }
+    .quiz-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+      border: 1px solid #eee;
+    }
+    .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--primary-color); }
+    
+    /* --- Themed Code Snippets --- */
+    .code-snippet {
+      background: #282c34;
+      color: var(--code-text);
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+      border-left: 5px solid var(--gf-green);
+      line-height: 1.6;
+    }
+    .kwd { color: var(--code-keyword); font-weight: bold; }
+    .var { color: var(--code-var); }
+    .cmt { color: #7f848e; font-style: italic; }
+
+    .option-label {
+      display: block;
+      padding: 18px 25px;
+      margin-bottom: 12px;
+      border: 2px solid #f0f0f0;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 500;
+    }
+    .option-label:hover { background-color: #f8f9fa; border-color: var(--gf-green); }
+    input[type="radio"] { display: none; }
+    input[type="radio"]:checked + .option-label {
+      background-color: #e8f5e9;
+      border-color: var(--gf-green);
+      color: var(--gf-dark-green);
+    }
+
+    .correct-answer { background-color: #d1e7dd !important; border-color: #198754 !important; color: #0f5132 !important; }
+    .wrong-answer { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #842029 !important; }
+
+    .result-section {
+      display: none;
+      background-color: var(--dark-gray);
+      color: white;
+      border-radius: 30px;
+      padding: 60px;
+      text-align: center;
+      margin: 50px 0;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+    .score-number { font-size: 6.5rem; font-weight: 800; line-height: 1; }
+    .text-fail { color: #ff4d4d !important; }
+    .text-good { color: #ffcc00 !important; }
+    .text-excellent { color: #2ecc71 !important; }
+
+    footer { background: #1a1a1a; color: white; padding: 50px 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top py-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <i class="fas fa-terminal me-2"></i>CSC<span>402</span>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="basics.html">Basics</a></li>
+        <li class="nav-item"><a class="nav-link" href="flowchart.html">Flowchart</a></li>
+        <li class="nav-item"><a class="nav-link" href="pseudocode.html">Pseudocode</a></li>
+        <li class="nav-item"><a class="nav-link" href="control.html">Control Structures</a></li>
+        <li class="nav-item ms-lg-3"><a class="btn btn-nav-quiz px-4" href="quizzes.html">Practice Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header text-center">
+  <div class="container">
+    <h1 class="display-3 fw-bold mb-3">Skill Assessment</h1>
+    <p class="lead opacity-75 fs-4">Test your knowledge on Algorithmic Problem Solving</p>
+  </div>
+</header>
+
+<main class="container my-5">
+  <div class="quiz-container">
+    <form id="quizForm">
+      <div id="questions-wrapper"></div>
+
+      <div class="text-center mt-5">
+        <button type="button" class="btn btn-success btn-lg px-5 py-3 fw-bold shadow" onclick="checkAnswers()">SUBMIT MY ANSWERS</button>
+      </div>
+
+      <div id="resultArea" class="result-section">
+        <h2 class="fw-bold display-5 mb-2" id="resultStatus"></h2>
+        <div id="resultScoreDisplay" class="score-number">0</div>
+        <p class="fs-4 opacity-75">Correct Answers</p>
+        <p id="resultQuote" class="fst-italic mt-3 px-lg-5"></p>
+        <div class="mt-4">
+          <button type="button" class="btn btn-outline-light px-4" onclick="location.reload()">Reset and Try Again</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer class="bg-dark text-white py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h3 class="fw-bold mb-0">CSC402 Portal</h3>
+          <p class="text-secondary">Algorithmic Problem Solving Learning Tool</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <a href="about.html" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+          <a href="about.html" class="text-white me-3"><i class="fab fa-github"></i></a>
+          <a href="about.html" class="text-white"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <hr class="my-4 border-secondary">
+      <div class="row small text-secondary">
+        <div class="col-md-6">© 2025 Algorithmic Problem Solving | UiTM Educational Purpose</div>
+        <div class="col-md-6 text-md-end">
+          <a href="index.html" class="text-secondary text-decoration-none me-2">Home</a>
+          <a href="quizzes.html" class="text-secondary text-decoration-none">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Data structure for all questions
+// Data structure remains the same
+const quizData = [
+  { id: "q1", question: "Which of the following is an informal high-level description of a computer program algorithm?", options: {a: "Pseudocode", b: "Compiler", c: "Flowchart", d: "Executable File"}, answer: "a" },
+  { id: "q2", question: "Which flowchart symbol is used to represent a 'Decision' or a 'Condition'?", options: {a: "Rectangle", b: "Diamond", c: "Parallelogram", d: "Oval"}, answer: "b" },
+  { id: "q3", question: "In logic, which operator requires BOTH conditions to be true to produce a TRUE result?", options: {a: "OR", b: "NOT", c: "AND", d: "XOR"}, answer: "c" },
+  { id: "q4", question: "What is the first stage of the Problem Development Life Cycle (PDLC)?", options: {a: "Algorithm Design", b: "Problem Analysis", c: "Coding", d: "Documentation"}, answer: "b" },
+  { id: "q5", question: "Which of the following is NOT a column in an IPO Chart?", options: {a: "Input", b: "Process", c: "Output", d: "Storage"}, answer: "d" },
+  { id: "q6", question: "An algorithm must be unambiguous, which means:", options: {a: "It should be written in Python", b: "Each step must be clearly defined with only one interpretation", c: "It must never end", d: "It must have at least 100 steps"}, answer: "b" },
+  { id: "q7", question: "Which loop structure checks the condition before executing the loop body?", options: {a: "Pre-test Loop (e.g. WHILE)", b: "Post-test Loop", c: "Infinite Loop", d: "Sequence Loop"}, answer: "a" },
+  { id: "q8", question: "What is a 'Sentinel Value'?", options: {a: "A value used to calculate the average", b: "A special value used to terminate a loop", c: "The initial value of a counter", d: "A math constant like Pi"}, answer: "b" },
+  { id: "q9", question: "What is the value of <strong>Total</strong> after this logic?", code: '<span class="kwd">SET</span> <span class="var">Price</span> = 20<br><span class="kwd">IF</span> <span class="var">Price</span> > 15 <span class="kwd">THEN</span><br>&nbsp;&nbsp;<span class="kwd">SET</span> <span class="var">Total</span> = <span class="var">Price</span> * 2<br><span class="kwd">ELSE</span><br>&nbsp;&nbsp;<span class="kwd">SET</span> <span class="var">Total</span> = <span class="var">Price</span> + 10<br><span class="kwd">ENDIF</span>', options: {a: "30", b: "40", c: "20", d: "15"}, answer: "b" },
+  { id: "q10", question: "How many times will the word 'Hi' be printed?", code: '<span class="kwd">SET</span> <span class="var">counter</span> = 0<br><span class="kwd">WHILE</span> <span class="var">counter</span> < 3 <span class="kwd">DO</span><br>&nbsp;&nbsp;<span class="kwd">DISPLAY</span> "Hi"<br>&nbsp;&nbsp;<span class="kwd">SET</span> <span class="var">counter</span> = <span class="var">counter</span> + 1<br><span class="kwd">ENDWHILE</span>', options: {a: "1 time", b: "2 times", c: "3 times", d: "4 times"}, answer: "c" },
+  { id: "q11", question: "What is the output of the following pseudocode?", code: '<span class="kwd">SET</span> <span class="var">num</span> = 7<br><span class="kwd">IF</span> <span class="var">num</span> MOD 2 == 0 <span class="kwd">THEN</span><br>&nbsp;&nbsp;<span class="kwd">DISPLAY</span> "Even"<br><span class="kwd">ELSE</span><br>&nbsp;&nbsp;<span class="kwd">DISPLAY</span> "Odd"<br><span class="kwd">ENDIF</span>', options: {a: "Even", b: "Odd", c: "7", d: "Error"}, answer: "b" },
+  { id: "q12", question: "Identify the error in the following logic:", code: '<span class="kwd">SET</span> <span class="var">x</span> = 1<br><span class="kwd">WHILE</span> <span class="var">x</span> <= 5 <span class="kwd">DO</span><br>&nbsp;&nbsp;<span class="kwd">DISPLAY</span> <span class="var">x</span><br><span class="kwd">ENDWHILE</span>', options: {a: "Syntax Error", b: "Infinite Loop (Counter not updated)", c: "Logical comparison wrong", d: "There is no error"}, answer: "b" },
+  { id: "q13", question: "Trace the output of this nested IF:", code: '<span class="kwd">SET</span> <span class="var">score</span> = 85<br><span class="kwd">IF</span> <span class="var">score</span> >= 90 <span class="kwd">THEN</span><br>&nbsp;&nbsp;<span class="kwd">DISPLAY</span> "Excellent"<br><span class="kwd">ELSE</span><br>&nbsp;&nbsp;<span class="kwd">IF</span> <span class="var">score</span> >= 80 <span class="kwd">THEN</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kwd">DISPLAY</span> "Good"<br>&nbsp;&nbsp;<span class="kwd">ELSE</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kwd">DISPLAY</span> "Average"<br>&nbsp;&nbsp;<span class="kwd">ENDIF</span><br><span class="kwd">ENDIF</span>', options: {a: "Good", b: "Excellent", c: "Average", d: "Pass"}, answer: "a" },
+  { id: "q14", question: "What is the value of <strong>Sum</strong> after the loop ends?", code: '<span class="kwd">SET</span> <span class="var">Sum</span> = 0<br><span class="kwd">FOR</span> <span class="var">i</span> = 1 TO 3<br>&nbsp;&nbsp;<span class="var">Sum</span> = <span class="var">Sum</span> + <span class="var">i</span><br><span class="kwd">ENDFOR</span>', options: {a: "3", b: "5", c: "6", d: "0"}, answer: "c" },
+  { id: "q15", question: "What is the final value of <strong>Result</strong>?", code: '<span class="kwd">SET</span> <span class="var">A</span> = 10, <span class="var">B</span> = 5<br><span class="kwd">SET</span> <span class="var">Result</span> = <span class="var">A</span> + <span class="var">B</span> * 2', options: {a: "30", b: "15", c: "20", d: "25"}, answer: "c" }
+];
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function renderQuiz() {
+  const wrapper = document.getElementById('questions-wrapper');
+  wrapper.innerHTML = ""; // Clear existing
+  shuffleArray(quizData); 
+
+  quizData.forEach((q, index) => {
+    let optionKeys = Object.keys(q.options);
+    shuffleArray(optionKeys);
+
+    let codeHtml = q.code ? `<div class="code-snippet">${q.code}</div>` : '';
+    let optionsHtml = optionKeys.map(key => `
+      <input type="radio" name="${q.id}" id="${q.id}${key}" value="${key}">
+      <label class="option-label" for="${q.id}${key}">${q.options[key]}</label>
+    `).join('');
+
+    wrapper.innerHTML += `
+      <div class="quiz-card" id="card-${q.id}">
+        <p class="question-text">${index + 1}. ${q.question}</p>
+        ${codeHtml}
+        ${optionsHtml}
+      </div>
+    `;
+  });
+}
+
+function checkAnswers() {
+  let score = 0;
+  let firstUnansweredId = null;
+
+  // 1. Validation check
+  for (let q of quizData) {
+    const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+    if (!selected) {
+      if (!firstUnansweredId) firstUnansweredId = q.id;
+    }
+  }
+
+  // If any question is missed
+  if (firstUnansweredId) {
+    alert("Wait! You missed some questions. Please answer all of them before submitting.");
+    const targetCard = document.getElementById(`card-${firstUnansweredId}`);
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    targetCard.style.border = "2px solid #dc3545";
+    setTimeout(() => { targetCard.style.border = "1px solid #eee"; }, 2000);
+    return;
+  }
+
+  // 2. Process Scoring (Only if all answered)
+  quizData.forEach(q => {
+    const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+    const allOptions = document.querySelectorAll(`input[name="${q.id}"]`);
+    
+    allOptions.forEach(opt => {
+      const label = document.querySelector(`label[for="${opt.id}"]`);
+      label.classList.remove('correct-answer', 'wrong-answer');
+    });
+
+    const correctLabel = document.querySelector(`label[for="${q.id}${q.answer}"]`);
+    correctLabel.classList.add('correct-answer');
+
+    if (selected.value !== q.answer) {
+      const wrongLabel = document.querySelector(`label[for="${selected.id}"]`);
+      wrongLabel.classList.add('wrong-answer');
+    } else {
+      score++;
+    }
+  });
+
+  // 3. Reveal Results with your Motivation Logic
+  const resultArea = document.getElementById('resultArea');
+  const status = document.getElementById('resultStatus');
+  const scoreDisplay = document.getElementById('resultScoreDisplay');
+  const quote = document.getElementById('resultQuote');
+  
+  resultArea.style.display = "block";
+  scoreDisplay.innerText = score + "/15";
+
+  if (score <= 4) {
+    status.innerText = "FAILED";
+    scoreDisplay.className = "score-number text-fail";
+    quote.innerText = "Don't give up! Coding logic takes practice. Review the 'Control Structures' module and try again.";
+  } else if (score <= 10) {
+    status.innerText = "GOOD";
+    scoreDisplay.className = "score-number text-good";
+    quote.innerText = "Nice work! You have a solid foundation, but a few logic steps tripped you up. Keep practicing!";
+  } else {
+    status.innerText = "CONGRATULATIONS!";
+    scoreDisplay.className = "score-number text-excellent";
+    quote.innerText = "Exceptional! You have a perfect grasp of algorithmic logic. You are ready for any challenge!";
+  }
+
+  resultArea.scrollIntoView({ behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
